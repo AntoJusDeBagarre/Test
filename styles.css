@@ -1,0 +1,99 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f7f9fc;
+  color: #333;
+}
+
+.hero-section {
+  background: linear-gradient(135deg,#f7f1e1, #333 );
+}
+
+.bg-gradient-custom {
+  background: linear-gradient(to right, #ff6a00, #ee0979);
+}
+
+.btn-custom {
+  background-color: #ff6a00;
+  border: none;
+  color: white;
+}
+
+.btn-custom:hover {
+  background-color: #ee0979;
+}
+
+.card:hover {
+  transform: scale(1.03);
+  transition: transform 0.3s ease;
+}
+
+.project-card {
+  border: none;
+}
+
+img.rounded-circle {
+  border: 5px solid #fff;
+  object-fit: cover;
+}
+.meet-me-section {
+  position: relative;
+  height: 100vh;
+  background: url('Anto.jpg') center center / cover no-repeat;
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+.meet-me-section .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* assombrit un peu l’image pour rendre le texte plus lisible */
+  z-index: 1;
+}
+
+.meet-me-section .content {
+  z-index: 2;
+  position: relative;
+}
+.bg-cover-section {
+  position: relative;
+  background: url('Anto.jpg') center center / cover no-repeat;
+  background-attachment: fixed;
+  z-index: 0;
+}
+
+.bg-cover-section .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6); /* fonce le fond pour lisibilité */
+  z-index: 1;
+}
+
+.bg-cover-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.bg-cover-section h2, 
+.bg-cover-section p,
+.bg-cover-section .card-title,
+.bg-cover-section .card-text {
+  color: white;
+}
+
+/* Style des cartes dans background sombre */
+.bg-cover-section .card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+.bg-cover-section .card img {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
