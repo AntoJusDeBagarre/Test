@@ -1,0 +1,23 @@
+---
+- name: downloading kubectl
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+    dest: "/usr/local/bin/kubectl"
+    checksum: "sha256:https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl.sha256"
+    mode: "0755"
+
+- name: downloading helm
+  ansible.builtin.get_url:
+    url: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"
+    dest: "/tmp/helm.tar.gz"
+
+- name: install helm
+  ansible.builtin.unarchive:
+    src: "/tmp/helm.tar.gz"
+    dest: "/usr/local/bin"
+    include:
+      - "linux-amd64/helm"
+    remote_src: yes
+    extra_opts:
+      - --strip-components
+      - 1

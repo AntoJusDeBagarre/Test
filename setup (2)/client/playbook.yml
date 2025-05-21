@@ -1,0 +1,40 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - python
+    - tools
+  tasks:
+    - name: Create directories
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/k8s-app/deployment"
+        state: directory
+  tags: always
+
+- name: Setup Docker
+  hosts: all
+  become: true
+  roles:
+    - docker
+    - kubectl
+    - minikube
+  tasks:
+    - name: set variable REGISTRY
+      ansible.builtin.lineinfile:
+        path: "/home/{{ ansible_user }}/.bashrc"
+        regexp: '^export REGISTRY_URL='
+        line: "export REGISTRY_URL={{ ip_address_host }}:5000"
+  tags: always
+
+- name: Setup Docker
+  hosts: all
+  tasks:
+    - name: Docker login to registry
+      community.docker.docker_login:
+        username: aux250
+        password: ipi
+        registry_url: "{{ ip_address_host }}:5000"
+        state: present
+        tls: true
+        validate_certs: false
+  tags: always

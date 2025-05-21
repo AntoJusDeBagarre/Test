@@ -1,0 +1,3 @@
+---
+dive_version: 0.12.0
+insecure_registries: {"insecure-registries": ["{{ ip_address_host }}:5000"]}

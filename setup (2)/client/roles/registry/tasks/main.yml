@@ -1,0 +1,47 @@
+---
+- name: Create registry directories
+  ansible.builtin.file:
+    path: "/opt/{{ item }}"
+    state: directory
+  loop:
+    - auth
+    - certs
+    - registry
+
+- name: Generate SSL private key
+  community.crypto.openssl_privatekey:
+      path: /opt/certs/registry.pem
+
+- name: Generate SSL cert
+  community.crypto.x509_certificate:
+    path: /opt/certs/registry.crt
+    privatekey_path: /opt/certs/registry.pem
+    provider: selfsigned
+
+# user: aux250
+# pass: ipi
+- name: Copy auth file
+  ansible.builtin.copy:
+    dest: /opt/auth/htpasswd
+    src: htpasswd
+
+- name: Start registry container
+  community.docker.docker_container:
+    name: registry
+    image: registry:2
+    exposed_ports:
+      - 5000
+    env:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+      REGISTRY_HTTP_ADDR: "0.0.0.0:5000"
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/registry.crt
+      REGISTRY_HTTP_TLS_KEY: /certs/registry.pem
+    published_ports:
+      - "5000:5000"
+    restart_policy: "unless-stopped"
+    volumes:
+      - /opt/auth:/auth
+      - /opt/certs:/certs
+      - /opt/registry:/var/lib/registry

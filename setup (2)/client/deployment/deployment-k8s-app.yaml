@@ -1,0 +1,26 @@
+# deployment/deployment-k8s-app.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-app
+  labels:
+    app: k8s-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-app
+  template:
+    metadata:
+      labels:
+        app: k8s-app
+    spec:
+      containers:
+      - name: k8s-app
+        image: 10.23.105.46:5000/antony/app:v0.1
+        ports: 
+        - containerPort: 8000
+          name: http
+      imagePullSecrets:
+      - name: regcred

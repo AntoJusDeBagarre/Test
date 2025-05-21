@@ -1,0 +1,18 @@
+---
+- name: Get python3 version
+  ansible.builtin.raw: python3 --version |sed 's/^Python //'
+  changed_when: false
+  register: python3_version
+  
+- name: Look for pip3
+  ansible.builtin.raw: which pip3
+  changed_when: false
+  register: pip3_found
+  failed_when: pip3_found.rc not in [0,1]
+
+- name: Ensure pip is installed
+  become: yes
+  ansible.builtin.apt:
+    name: python3-pip
+    update_cache: yes
+  when: pip3_found.rc == 1

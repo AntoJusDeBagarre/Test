@@ -1,0 +1,58 @@
+---
+- name: Install required system packages
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+
+- name: Add Docker GPG APT key
+  ansible.builtin.apt_key:
+    keyring: /etc/apt/keyrings/docker.gpg
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker repository to APT sources
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable
+
+- name: Install Docker
+  ansible.builtin.apt:
+    name:
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose-plugin
+    state: present
+
+- name: Enabled docker services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+  loop:
+    - containerd.service
+    - docker.service
+
+- name: Add vagrant user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+
+- name: Install Dive
+  ansible.builtin.apt:
+    deb: "https://github.com/wagoodman/dive/releases/download/v{{ dive_version }}/dive_{{ dive_version }}_linux_amd64.deb"
+
+- name: Add insecure registry
+  ansible.builtin.copy:
+    content: "{{ insecure_registries | to_nice_json }}"
+    dest: /etc/docker/daemon.json
+
+- name: Reload docker service
+  ansible.builtin.systemd:
+    name: docker.service
+    enabled: true
+    state: reloaded

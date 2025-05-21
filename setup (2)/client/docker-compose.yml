@@ -1,0 +1,8 @@
+# k8s-app/docker-compose.yml
+---
+services:
+  app:
+    build: .
+    image: "$REGISTRY_URL/$TRG/app:v0.1"
+    ports:
+    - "8000:8000"

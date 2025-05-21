@@ -1,0 +1,7 @@
+- name: Install some useful tools
+  become: yes
+  ansible.builtin.apt:
+    name: "{{ item }}"
+  loop:
+    - jq
+    - rsync
